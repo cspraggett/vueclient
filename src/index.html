@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>VueClient</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+
+    <!-- Vue Dev Library -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- Client App Configs -->
+    <script src="./configs.js"></script>
+    <link rel="stylesheet" type="text/css" href= "./css/index.css" >
+</head>
+
+<body>
+<header>
+    <h2 id="message">Welcome to the <span class="highlight">VueClient</span> Client</h2>
+</header>
+
+<main>
+    <section id="departments">
+        <button v-on:click="getDepartments">Fetch Department Data</button>
+        <div v-if="failure">
+            <aside class="lowlight">Failed To Fetch Department Records</aside>
+        </div>
+        <div v-else-if="depts.length">
+            <table>
+                <caption>
+                    The Departments
+                </caption>
+
+                <colgroup>
+                    <col/>
+                    <col/>
+                </colgroup>
+
+                <thead>
+                <tr>
+                    <th scope="col">Dept_No</th>
+                    <th scope="col">Dept_Name</th>
+                </tr>
+                </thead>
+
+                <tbody v-for="department in depts" :key="department.dept_no">
+                   <td>{{department.dept_no}}</td>
+                   <td>{{department.dept_name}}</td>
+                </tbody>
+            </table>
+        </div>
+        <div v-else>
+            <aside>No Department Data</aside>
+        </div>
+    </section>
+
+    <section id="employees">
+        <button v-on:click="getEmployees">Fetch Employee Data</button>
+        <label>
+            Gender:
+            <select v-model="gender">
+                <option disabled value="">Please select a valid option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </label>
+
+        <label>
+            Hire Date:
+            <input v-model="hireDate" type="date" />
+        </label>
+        <div v-if="failure">
+            <aside className="lowlight">Failed To Fetch Employee Records</aside>
+        </div>
+        <div v-else-if="employees.length">
+            <table>
+                <caption>
+                    The Employees
+                </caption>
+
+                <colgroup>
+                    <col/>
+                    <col/>
+                    <col/>
+                    <col/>
+                    <col/>
+                    <col/>
+                </colgroup>
+
+                <thead>
+                <tr>
+                    <th scope="col">Emp_No</th>
+                    <th scope="col">Birth_Date</th>
+                    <th scope="col">First_Name</th>
+                    <th scope="col">Last_Name</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Hire_Date</th>
+                </tr>
+                </thead>
+
+                <tbody v-for="employee in employees" :key="employee.emp_no">
+                <tr>
+                    <td>{{employee.emp_no}}</td>
+                    <td>{{employee.birth_date}}</td>
+                    <td>{{employee.first_name}}</td>
+                    <td>{{employee.last_name}}</td>
+                    <td>{{employee.gender}}</td>
+                    <td>{{employee.hire_date}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else>
+            <aside>No Employee Data</aside>
+        </div>
+    </section>
+
+    <section id="create-employee">
+        <button v-on:click="createEmployee">Create New Employee</button>
+
+        <label>
+            Emp_No:
+            <input v-model="empNo" type="number" />
+        </label>
+
+        <label>
+            Birth Date:
+            <input v-model="birthDate" type="date" />
+        </label>
+
+        <label>
+            First Name:
+            <input v-model="firstName" type="text" />
+        </label>
+
+        <label>
+            Last Name:
+            <input v-model="lastName" type="text">
+        </label>
+
+        <label>
+            Gender:
+            <select v-model="gender">
+                <option value="" hidden disabled>Please select a valid option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </label>
+
+        <label>
+            Hire Date After:
+            <input v-model="hireDate" type="date">
+        </label>
+        <div v-if="success">
+            <aside className="highlight">Successfully Created New Employee</aside>
+        </div>
+        <div v-else-if="failure">
+            <aside className="lowlight">Failed To Create New Employee</aside>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <address>
+        <label>Contact information:</label>
+        <label>Toll-free: <a href="tel:+1-888-629-8620" target="_blank">1-888-629-8620</a></label>
+
+        <label><a href="mailto:info@mitechisys.com">info@mitechisys.com</a></label>
+    </address>
+</footer>
+
+<script>
+    var department = new Vue({
+        el: '#departments',
+        data: {
+            depts: [],
+            failure: false
+        },
+        methods: {
+          getDepartments: function() {
+              const request = `${window.Configs.host}/departments`
+              const requestOptions = {
+                  method: 'GET',
+                  mode: 'cors',
+                  cache: 'no-cache',
+                  credentials: 'omit',
+              };
+              fetch(request, requestOptions)
+                  .then(response => {
+                      if (response.status === 200) {
+                          return response.json()
+                      } else {
+                          throw response.text();
+                      }
+                  })
+
+                  .then(data => this.depts = data)
+                  .catch(error => {
+                      this.failure = true;
+                      if (error instanceof Promise) {
+                          error.then(errorMessage => {
+                              console.warn(errorMessage)
+                          });
+                      } else {
+                          console.warn (error);
+                      }
+                  });
+
+          }
+        }
+    })
+
+    var employees = new Vue({
+        el: '#employees',
+        data: {
+           employees: '',
+           gender: '',
+           hireDate: '',
+           failure: false
+        },
+        methods: {
+            getEmployees: function(gender, hireDate) {
+                const request = `${window.Configs.host}/employees?gender=${this.gender}&hire_date=${this.hireDate}`
+                const requestOptions = {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                };
+               fetch(request, requestOptions)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw response.text();
+                    }
+                })
+                .then(data => {
+                    return this.employees = data})
+                .catch(error => {
+                    this.failure = true;
+                    if (error instanceof Promise) {
+                        error.then(errorMessage => {
+                            console.warn(errorMessage)
+                        });
+                    } else {
+                        console.warn (error);
+                    }
+                })
+            }
+        }
+    })
+    var createEmployee = new Vue({
+        el: '#create-employee',
+        data: {
+            empNo: '',
+            birthDate: '',
+            firstName: '',
+            lastName: '',
+            gender: '',
+            hireDate: '',
+            success: false,
+            failure: false,
+        },
+        methods: {
+            createEmployee: function() {
+                const request = new Request(`${window.Configs.host}/employees`);
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    body: JSON.stringify({
+                        emp_no: this.empNo,
+                        birth_date: this.birthDate,
+                        first_name: this.firstName,
+                        last_name: this.lastName,
+                        gender: this.gender,
+                        hire_date: this.hireDate
+                    })
+                };
+                fetch(request, requestOptions)
+                    .then(response => {
+                        if (response.status === 200){
+                            return response.text();
+                        }
+                        else {
+                            throw response.text();
+                        }
+                    })
+                    .then(results => {
+                        console.log(results);
+                            this.success = true,
+                            this.failure = false
+                    })
+                    .catch(error => {
+                            this.success = false,
+                            this.failure = true
+
+                        if (error instanceof Promise) {
+                            error.then(errorMessage => {
+                                console.warn(errorMessage);
+                            });
+                        }
+                        else {
+                            console.warn(error);
+                        }
+                    });
+            }
+        }
+    })
+</script>
+
+</body>
+
+</html>
