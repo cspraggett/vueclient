@@ -188,13 +188,17 @@
               fetch(request, requestOptions)
                   .then(response => {
                       if (response.status === 200) {
-                          return response.json()
+                          console.log('hello')
+                          return response.json();
                       } else {
+                          console.log('response: ', response.text())
                           throw response.text();
                       }
                   })
 
-                  .then(data => this.depts = data)
+                  .then(data => {
+                      console.log('data: ', data.body)
+                      return this.depts = data})
                   .catch(error => {
                       this.failure = true;
                       if (error instanceof Promise) {
@@ -284,6 +288,7 @@
                 };
                 fetch(request, requestOptions)
                     .then(response => {
+                        console.log('status', response.status)
                         if (response.status === 200){
                             return response.text();
                         }
@@ -293,11 +298,11 @@
                     })
                     .then(results => {
                         console.log(results);
-                            this.success = true,
+                            this.success = true
                             this.failure = false
                     })
                     .catch(error => {
-                            this.success = false,
+                            this.success = false
                             this.failure = true
 
                         if (error instanceof Promise) {
