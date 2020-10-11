@@ -176,6 +176,9 @@
             depts: [],
             failure: false
         },
+        created: function () {
+            this.getDepartments();
+        },
         methods: {
           getDepartments: function() {
               const request = `${window.Configs.host}/departments`
