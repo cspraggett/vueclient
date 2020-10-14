@@ -16,12 +16,12 @@
 
 <body>
 <header>
-    <h2 id="message">Welcome to the <span class="highlight">VueClient</span> Client</h2>
+    <h2 id="message">Welcome to the <span class="highlight">VueClient</span> Client<br /> {{display}}</h2>
 </header>
 
 <main>
     <section id="departments">
-        <button v-on:click="getDepartments">Fetch Department Data</button>
+<!--        <button v-on:click="getDepartments">Fetch Department Data</button>-->
         <div v-if="failure">
             <aside class="lowlight">Failed To Fetch Department Records</aside>
         </div>
@@ -34,18 +34,24 @@
                 <colgroup>
                     <col/>
                     <col/>
+                    <col/>
+                    <col/>
                 </colgroup>
 
                 <thead>
                 <tr>
                     <th scope="col">Dept_No</th>
                     <th scope="col">Dept_Name</th>
+                    <th scope="col">First_Name</th>
+                    <th scope="col">Last_Name</th>
                 </tr>
                 </thead>
 
-                <tbody v-for="department in depts" :key="department.dept_no">
+                <tbody v-for="department in depts" :key="department.emp_no">
                    <td>{{department.dept_no}}</td>
                    <td>{{department.dept_name}}</td>
+                   <td>{{department.first_name}}</td>
+                   <td>{{department.last_name}}</td>
                 </tbody>
             </table>
         </div>
@@ -169,150 +175,7 @@
     </address>
 </footer>
 
-<script>
-    var department = new Vue({
-        el: '#departments',
-        data: {
-            depts: [],
-            failure: false
-        },
-        methods: {
-          getDepartments: function() {
-              const request = `${window.Configs.host}/departments`
-              const requestOptions = {
-                  method: 'GET',
-                  mode: 'cors',
-                  cache: 'no-cache',
-                  credentials: 'omit',
-              };
-              fetch(request, requestOptions)
-                  .then(response => {
-                      if (response.status === 200) {
-                          return response.json()
-                      } else {
-                          throw response.text();
-                      }
-                  })
-
-                  .then(data => this.depts = data)
-                  .catch(error => {
-                      this.failure = true;
-                      if (error instanceof Promise) {
-                          error.then(errorMessage => {
-                              console.warn(errorMessage)
-                          });
-                      } else {
-                          console.warn (error);
-                      }
-                  });
-
-          }
-        }
-    })
-
-    var employees = new Vue({
-        el: '#employees',
-        data: {
-           employees: '',
-           gender: '',
-           hireDate: '',
-           failure: false
-        },
-        methods: {
-            getEmployees: function(gender, hireDate) {
-                const request = `${window.Configs.host}/employees?gender=${this.gender}&hire_date=${this.hireDate}`
-                const requestOptions = {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    credentials: 'omit',
-                };
-               fetch(request, requestOptions)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw response.text();
-                    }
-                })
-                .then(data => {
-                    return this.employees = data})
-                .catch(error => {
-                    this.failure = true;
-                    if (error instanceof Promise) {
-                        error.then(errorMessage => {
-                            console.warn(errorMessage)
-                        });
-                    } else {
-                        console.warn (error);
-                    }
-                })
-            }
-        }
-    })
-    var createEmployee = new Vue({
-        el: '#create-employee',
-        data: {
-            empNo: '',
-            birthDate: '',
-            firstName: '',
-            lastName: '',
-            gender: '',
-            hireDate: '',
-            success: false,
-            failure: false,
-        },
-        methods: {
-            createEmployee: function() {
-                const request = new Request(`${window.Configs.host}/employees`);
-                const requestOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    credentials: 'omit',
-                    body: JSON.stringify({
-                        emp_no: this.empNo,
-                        birth_date: this.birthDate,
-                        first_name: this.firstName,
-                        last_name: this.lastName,
-                        gender: this.gender,
-                        hire_date: this.hireDate
-                    })
-                };
-                fetch(request, requestOptions)
-                    .then(response => {
-                        if (response.status === 200){
-                            return response.text();
-                        }
-                        else {
-                            throw response.text();
-                        }
-                    })
-                    .then(results => {
-                        console.log(results);
-                            this.success = true,
-                            this.failure = false
-                    })
-                    .catch(error => {
-                            this.success = false,
-                            this.failure = true
-
-                        if (error instanceof Promise) {
-                            error.then(errorMessage => {
-                                console.warn(errorMessage);
-                            });
-                        }
-                        else {
-                            console.warn(error);
-                        }
-                    });
-            }
-        }
-    })
-</script>
+<script src="javaScript.js"></script>
 
 </body>
 
