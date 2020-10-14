@@ -32,7 +32,7 @@ var message = new Vue({
     depts: [],
     failure: false
 },
-    created: function () {
+    mounted: function () {
     this.getDepartments();
 },
     methods: {
