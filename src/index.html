@@ -32,7 +32,7 @@
                     <aside class="lowlight">Failed To Fetch Department Records</aside>
                 </div>
                 <div v-else-if="depts.length">
-                    <table>
+                    <table class="table table-striped">
                         <caption class="text-center">
                             The Departments
                         </caption>
@@ -44,7 +44,7 @@
                             <col/>
                         </colgroup>
 
-                        <thead>
+                        <thead class="thead-dark">
                         <tr>
                             <th scope="col">Dept_No</th>
                             <th scope="col">Dept_Name</th>
@@ -53,12 +53,12 @@
                         </tr>
                         </thead>
 
-                        <tbody v-for="department in depts" :key="department.emp_no">
+                        <tr v-for="department in depts" :key="department.emp_no">
                         <td>{{department.dept_no}}</td>
                         <td>{{department.dept_name}}</td>
                         <td>{{department.first_name}}</td>
                         <td>{{department.last_name}}</td>
-                        </tbody>
+                        </tr>
                     </table>
                 </div>
                 <div v-else>
@@ -98,7 +98,7 @@
                 <form class="form-horizontal">
                     <div class="row">
                         <div class="col-sm-10 offset-sm-2 my-4 mx-auto">
-                            <button v-on:click.stop.prevent="getEmployees" class="btn btn-lg btn-outline-primary">Fetch
+                            <button v-on:click.prevent="getEmployees" class="btn btn-lg btn-outline-primary">Fetch
                                 Employee Data
                             </button>
                         </div>
@@ -125,7 +125,7 @@
                     <aside class="lowlight">Failed To Fetch Employee Records</aside>
                 </div>
                 <div v-else-if="employees.length">
-                    <table class="mx-auto">
+                    <table class="table table-striped">
                         <caption class="text-center">
                             The Employees
                         </caption>
@@ -139,7 +139,7 @@
                             <col/>
                         </colgroup>
 
-                        <thead>
+                        <thead class="thead-dark" >
                         <tr>
                             <th scope="col">Emp_No</th>
                             <th scope="col">Birth_Date</th>
@@ -150,8 +150,7 @@
                         </tr>
                         </thead>
 
-                        <tbody v-for="employee in employees" :key="employee.emp_no">
-                        <tr>
+                        <tr v-for="employee in employees" :key="employee.emp_no">
                             <td>{{employee.emp_no}}</td>
                             <td>{{employee.birth_date}}</td>
                             <td>{{employee.first_name}}</td>
@@ -159,7 +158,6 @@
                             <td>{{employee.gender}}</td>
                             <td>{{employee.hire_date}}</td>
                         </tr>
-                        </tbody>
                     </table>
                 </div>
                 <div v-else>
@@ -171,11 +169,11 @@
 
     <div class="mx-auto card my-4" style="width:75%">
         <div class="mx-auto card-body">
-            <h5 class="card-title text-center my-2">Create Employee</h5>
+            <h5 class="card-title text-center my-2">Create New Employee</h5>
             <section id="create-employee">
                 <form class="form-horizontal">
-                    <div class="row mx-auto">
-                        <div class="col-sm-10 offset-sm-2 my-4 mx-auto">
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-2 my-4">
                             <button v-on:click.stop.prevent="createEmployee" class="btn btn-lg btn-outline-primary">Create New
                                 Employee
                             </button>
